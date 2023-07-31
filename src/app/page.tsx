@@ -5,6 +5,7 @@ import { fetchUsers } from "@/slices/userSlice";
 import { useEffect } from "react";
 import { AppDispatch, RootState } from "@/store/store";
 
+
 export default function Home() {
   const { entities } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();

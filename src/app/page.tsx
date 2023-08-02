@@ -1,22 +1,42 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUsers } from "@/slices/userSlice";
-import { useEffect } from "react";
+import { fetchUsers, increment } from "@/slices/userSlice";
+import React, { useEffect, useRef } from "react";
 import { AppDispatch, RootState } from "@/store/store";
 
-
 export default function Home() {
-  const { entities } = useSelector((state: RootState) => state.user);
+  const userRef = useRef(false);
+
+  const { entities, loading, value } = useSelector(
+    (state: RootState) => state.user
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   console.log("=======================================");
-  console.log("entities");
+  console.log(entities);
   console.log("=======================================");
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    if (userRef.current === false) {
+      dispatch(fetchUsers());
+    }
 
-  return <div>Hello</div>;
+    return () => {
+      userRef.current = true;
+    };
+  }, [dispatch]);
+
+  return (
+    <div>
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : (
+        entities?.map((user: any) => <h3 key={user.id}>{user.name}</h3>)
+      )}
+
+      <button onClick={() => dispatch(increment())}>Click on me..</button>
+      {value}
+    </div>
+  );
 }
